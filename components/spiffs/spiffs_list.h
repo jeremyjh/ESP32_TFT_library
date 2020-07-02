@@ -27,34 +27,34 @@
  * this software.
  */
 
-#ifndef _LIST_H
-#define	_LIST_H
+#ifndef _SPIFFS_LIST_H
+#define	_SPIFFS_LIST_H
 
 #include <stdint.h>
 #include "mutex.h"
 
-struct list {
+struct spiffs_list {
     struct mtx mutex;
-    struct list_index *index;
-    struct list_index *free;
+    struct spiffs_list_index *index;
+    struct spiffs_list_index *free;
     uint8_t indexes;
     uint8_t first_index;
 };
 
-struct list_index {
+struct spiffs_list_index {
     void *item;
     uint8_t index;
     uint8_t deleted;
-    struct list_index *next;
+    struct spiffs_list_index *next;
 };
 
-void list_init(struct list *list, int first_index);
-int list_add(struct list *list, void *item, int *item_index);
-int list_get(struct list *list, int index, void **item);
-int list_remove(struct list *list, int index, int destroy);
-int list_first(struct list *list);
-int list_next(struct list *list, int index);
-void list_destroy(struct list *list, int items);
+void spiffs_list_init(struct spiffs_list *list, int first_index);
+int spiffs_list_add(struct spiffs_list *list, void *item, int *item_index);
+int spiffs_list_get(struct spiffs_list *list, int index, void **item);
+int spiffs_list_remove(struct spiffs_list *list, int index, int destroy);
+int spiffs_list_first(struct spiffs_list *list);
+int spiffs_list_next(struct spiffs_list *list, int index);
+void spiffs_list_destroy(struct spiffs_list *list, int items);
 
-#endif	/* LIST_H */
+#endif	/* _SPIFFS_LIST_H */
 

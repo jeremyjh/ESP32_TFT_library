@@ -29,7 +29,7 @@
 #include <spiffs.h>
 #include <esp_spiffs.h>
 #include <spiffs_nucleus.h>
-#include "list.h"
+#include "spiffs_list.h"
 #include <sys/fcntl.h>
 #include <sys/dirent.h>
 #include "sdkconfig.h"
@@ -76,7 +76,7 @@ typedef struct {
 } spiffs_metadata_t;
 
 static spiffs fs;
-static struct list files;
+static struct spiffs_list files;
 
 static u8_t *my_spiffs_work_buf;
 static u8_t *my_spiffs_fds;
@@ -184,7 +184,7 @@ static int IRAM_ATTR vfs_spiffs_open(const char *path, int flags, int mode) {
 	}
 
     // Add file to file list. List index is file descriptor.
-    int res = list_add(&files, file, &fd);
+    int res = spiffs_list_add(&files, file, &fd);
     if (res) {
     	free(file);
     	errno = res;
@@ -246,7 +246,7 @@ static int IRAM_ATTR vfs_spiffs_open(const char *path, int flags, int mode) {
     }
 
     if (result != 0) {
-    	list_remove(&files, fd, 1);
+    	spiffs_list_remove(&files, fd, 1);
     	errno = result;
     	return -1;
     }
@@ -268,7 +268,7 @@ static ssize_t IRAM_ATTR vfs_spiffs_write(int fd, const void *data, size_t size)
 	vfs_spiffs_file_t *file;
 	int res;
 
-    res = list_get(&files, fd, (void **)&file);
+    res = spiffs_list_get(&files, fd, (void **)&file);
     if (res) {
 		errno = EBADF;
 		return -1;
@@ -299,7 +299,7 @@ static ssize_t IRAM_ATTR vfs_spiffs_read(int fd, void * dst, size_t size) {
 	vfs_spiffs_file_t *file;
 	int res;
 
-    res = list_get(&files, fd, (void **)&file);
+    res = spiffs_list_get(&files, fd, (void **)&file);
     if (res) {
 		errno = EBADF;
 		return -1;
@@ -335,7 +335,7 @@ static int IRAM_ATTR vfs_spiffs_fstat(int fd, struct stat * st) {
 	int res;
 	spiffs_metadata_t meta;
 
-    res = list_get(&files, fd, (void **)&file);
+    res = spiffs_list_get(&files, fd, (void **)&file);
     if (res) {
 		errno = EBADF;
 		return -1;
@@ -376,7 +376,7 @@ static int IRAM_ATTR vfs_spiffs_close(int fd) {
 	vfs_spiffs_file_t *file;
 	int res;
 
-    res = list_get(&files, fd, (void **)&file);
+    res = spiffs_list_get(&files, fd, (void **)&file);
     if (res) {
 		errno = EBADF;
 		return -1;
@@ -392,7 +392,7 @@ static int IRAM_ATTR vfs_spiffs_close(int fd) {
 		return -1;
 	}
 
-	list_remove(&files, fd, 1);
+	spiffs_list_remove(&files, fd, 1);
 
 	return 0;
 }
@@ -402,7 +402,7 @@ static off_t IRAM_ATTR vfs_spiffs_lseek(int fd, off_t size, int mode) {
 	vfs_spiffs_file_t *file;
 	int res;
 
-    res = list_get(&files, fd, (void **)&file);
+    res = spiffs_list_get(&files, fd, (void **)&file);
     if (res) {
 		errno = EBADF;
 		return -1;
@@ -804,7 +804,7 @@ int spiffs_mount() {
 		goto exit;
     }
 
-    list_init(&files, 0);
+    spiffs_list_init(&files, 0);
 
     ESP_LOGI(tag, "Mounted");
 
