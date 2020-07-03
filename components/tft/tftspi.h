@@ -7,7 +7,10 @@
 #ifndef _TFTSPI_H_
 #define _TFTSPI_H_
 
-#include "tftspi.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "spi_master_lobo.h"
 #include "sdkconfig.h"
 #include "stmpe610.h"
@@ -781,4 +784,9 @@ uint32_t stmpe610_getID();
 
 // ===============================================================================
 
+
+#ifdef __cplusplus
+}
 #endif
+
+#endif /* _TFTSPI_H_  */
