@@ -9,6 +9,7 @@ config TFT_PREDEFINED_DISPLAY_TYPE
     default 4 if TFT_PREDEFINED_DISPLAY_TYPE4
     default 5 if TFT_PREDEFINED_DISPLAY_TYPE5
     default 6 if TFT_PREDEFINED_DISPLAY_TYPE6
+    default 7 if TFT_PREDEFINED_DISPLAY_TYPE7
 
 
     choice
@@ -31,6 +32,8 @@ config TFT_PREDEFINED_DISPLAY_TYPE
             bool "TTGO T-DISPLAY (ST7789V)"
         config TFT_PREDEFINED_DISPLAY_TYPE6
             bool "TTGO T-WRISTBAND (ST7735)"
+        config TFT_PREDEFINED_DISPLAY_TYPE7
+            bool "TTGO [T4] T-WATCHER 1.3 (ILI9341)"
 
     endchoice
 
