@@ -621,8 +621,8 @@ esp_err_t spi_lobo_bus_remove_device(spi_lobo_device_handle_t handle)
 		if (spihost[handle->host_dev]->device[x] !=NULL) break;
 	}
 	if (x == NO_DEV) {
-		free(handle);
 		spi_lobo_bus_free(handle->host_dev, 1);
+		free(handle);
 	}
 	else free(handle);
 
